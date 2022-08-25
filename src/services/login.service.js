@@ -1,6 +1,5 @@
-const jwt = require('jsonwebtoken');
-const configAuth = require('../config/auth');
 const { User } = require('../database/models');
+const { generetaToken } = require('../utils/auth');
 const CustomError = require('../utils/customError');
 
 const createSession = async ({ email, password }) => {
@@ -13,11 +12,7 @@ const createSession = async ({ email, password }) => {
   if (!response) {
     throw new CustomError(400, 'Invalid fields');
   }
-
-  const token = jwt.sign(
-    { id: response.id, email }, configAuth.secret,
-    { expiresIn: configAuth.expiresIn, algorithm: configAuth.algorithm },
-  );
+  const token = generetaToken({ id: response.id, email });
 
   return {
     token,
