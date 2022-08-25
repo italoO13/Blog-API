@@ -9,6 +9,9 @@ const generetaToken = (payload) => {
   return token;
 };
 
+const decode = (token) => jwt.verify(token, configAuth.secret);
+
 module.exports = {
   generetaToken,
+  decode,
 };
