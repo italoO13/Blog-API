@@ -6,5 +6,6 @@ const categoriesController = require('../controllers/categories.controller');
 const router = express.Router();
 
 router.post('/', categoriesValidators.create, authenticated, categoriesController.create);
+router.get('/', authenticated, categoriesController.getAll);
 
 module.exports = router;
