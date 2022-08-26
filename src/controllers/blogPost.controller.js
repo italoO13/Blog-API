@@ -32,8 +32,21 @@ const getPostById = async (req, res, next) => {
   }
 };
 
+const deletePostById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { id: idUser } = req.user;
+    await blogPostService.deletePostById(id, idUser);
+    res.status(204).json();
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getPostById,
+  deletePostById,
 };
