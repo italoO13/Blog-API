@@ -14,5 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   });
 
+  User.associate = (models) => {
+    User.hasMany(models.BlogPost,
+      {foreingKey: 'id', as: 'category'})
+  }
+
   return User;
 };
