@@ -2,6 +2,17 @@ const { Op } = require('sequelize');
 const { BlogPost, PostCategory, sequelize, Category, User } = require('../database/models');
 const CustomError = require('../utils/customError');
 
+const verifyUser = async (id, userId) => {
+  const post = await BlogPost.findByPk(id);
+  if (!post) {
+    throw new CustomError(404, 'Post does not exist');
+  }
+  if (post.userId !== userId) {
+    throw new CustomError(401, 'Unauthorized user');
+  }
+  return post;
+};
+
 const create = async (id, { title, content, categoryIds }) => {
   const response = await sequelize.transaction(async (transaction) => {
     const post = await BlogPost.create(
@@ -80,17 +91,20 @@ const searchPost = async (search) => {
 };
 
 const deletePostById = async (id, userId) => {
-  const post = await BlogPost.findByPk(id);
-  if (!post) {
-    throw new CustomError(404, 'Post does not exist');
-  }
-  if (post.userId !== userId) {
-    throw new CustomError(401, 'Unauthorized user');
-  }
+  await verifyUser(id, userId);
   const response = await BlogPost.destroy(
     { where: { id } },
   );
   return response;
+};
+
+const editPost = async (id, userId, { title, content }) => {
+  await verifyUser(id, userId);
+  await BlogPost.update(
+    { title, content },
+    { where: { id } },
+  );
+  return getPostById(id);
 };
 
 module.exports = {
@@ -99,4 +113,5 @@ module.exports = {
   getPostById,
   deletePostById,
   searchPost,
+  editPost,
 };

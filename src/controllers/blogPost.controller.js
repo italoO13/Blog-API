@@ -55,10 +55,23 @@ const searchPost = async (req, res, next) => {
   }
 };
 
+const editPost = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { id: userId } = req.user;
+    const response = await blogPostService.editPost(id, userId, req.body);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getPostById,
   deletePostById,
   searchPost,
+  editPost,
 };

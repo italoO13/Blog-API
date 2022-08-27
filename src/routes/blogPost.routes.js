@@ -10,5 +10,6 @@ router.get('/search', authenticated, blogPostController.searchPost);
 router.get('/', authenticated, blogPostController.getAll);
 router.get('/:id', authenticated, blogPostController.getPostById);
 router.delete('/:id', authenticated, blogPostController.deletePostById);
+router.put('/:id', authenticated, blogPOstValidators.editPost, blogPostController.editPost);
 
 module.exports = router;
